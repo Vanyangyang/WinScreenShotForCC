@@ -10,5 +10,6 @@
     "quality_preset": "low",
     "show_success_popup": false,
     "screenshot_mode": "auto",
-    "language": "en"
+    "language": "en",
+    "custom_prefix": "read image: "
 }

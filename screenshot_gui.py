@@ -87,6 +87,8 @@ class ScreenshotGUI:
                 "quality_warning": "⚠️ 警告：高质量模式会生成较大的文件，可能消耗大量token！\n建议仅在必要时使用高质量模式。",
                 "auto_copy_path": "自动复制路径到剪贴板",
                 "show_preview": "显示预览窗口",
+                "custom_prefix": "自定义前缀:",
+                "prefix_tip": "💡 前缀将添加到剪贴板内容的开头，例如：'![截图](' 或 '图片：'",
                 "hotkey": "热键:",
                 "hotkey_disabled": "热键未启用",
                 "hotkey_enabled": "热键已启用",
@@ -142,6 +144,8 @@ class ScreenshotGUI:
                 "quality_warning": "⚠️ Warning: High quality mode generates large files that may consume many tokens!\nUse high quality mode only when necessary.",
                 "auto_copy_path": "Auto copy path to clipboard",
                 "show_preview": "Show preview window",
+                "custom_prefix": "Custom Prefix:",
+                "prefix_tip": "💡 Prefix will be added to the beginning of clipboard content, e.g., '![Screenshot](' or 'Image: '",
                 "hotkey": "Hotkey:",
                 "hotkey_disabled": "Hotkey disabled",
                 "hotkey_enabled": "Hotkey enabled",
@@ -322,10 +326,31 @@ class ScreenshotGUI:
         self.ui_elements['copy_path_cb'] = self.copy_path_cb
         
         self.show_preview_var = tk.BooleanVar()
-        self.show_preview_cb = tk.Checkbutton(options_frame, text=self.tr("show_preview"), 
+        self.show_preview_cb = tk.Checkbutton(options_frame, text=self.tr("show_preview"),
                       variable=self.show_preview_var)
         self.show_preview_cb.pack(anchor=tk.W)
         self.ui_elements['show_preview_cb'] = self.show_preview_cb
+
+        # 自定义前缀设置
+        prefix_frame = tk.Frame(self.settings_frame)
+        prefix_frame.pack(fill=tk.X, padx=10, pady=5)
+
+        self.prefix_label = tk.Label(prefix_frame, text=self.tr("custom_prefix"))
+        self.prefix_label.pack(side=tk.LEFT)
+        self.ui_elements['prefix_label'] = self.prefix_label
+
+        self.prefix_var = tk.StringVar()
+        self.prefix_entry = tk.Entry(prefix_frame, textvariable=self.prefix_var, width=30)
+        self.prefix_entry.pack(side=tk.LEFT, padx=5)
+
+        # 前缀提示
+        prefix_tip_frame = tk.Frame(self.settings_frame)
+        prefix_tip_frame.pack(fill=tk.X, padx=10, pady=2)
+
+        self.prefix_tip_label = tk.Label(prefix_tip_frame, text=self.tr("prefix_tip"),
+                font=("Arial", 9), fg="#6c757d")
+        self.prefix_tip_label.pack(anchor=tk.W)
+        self.ui_elements['prefix_tip_label'] = self.prefix_tip_label
         
         # 热键设置
         self.hotkey_frame = tk.LabelFrame(main_frame, text=self.tr("hotkey_settings"), pady=10)
@@ -503,6 +528,10 @@ class ScreenshotGUI:
                 element.config(text=self.tr("auto_copy_path"))
             elif key == 'show_preview_cb':
                 element.config(text=self.tr("show_preview"))
+            elif key == 'prefix_label':
+                element.config(text=self.tr("custom_prefix"))
+            elif key == 'prefix_tip_label':
+                element.config(text=self.tr("prefix_tip"))
             elif key == 'hotkey_frame':
                 element.config(text=self.tr("hotkey_settings"))
             elif key == 'hotkey_label':
@@ -565,8 +594,9 @@ class ScreenshotGUI:
         self.quality_var.set(self.config.get("quality_preset", "low"))
         self.copy_path_var.set(self.config.get("auto_copy_path", True))
         self.show_preview_var.set(self.config.get("show_preview", True))
+        self.prefix_var.set(self.config.get("custom_prefix", "read image: "))
         self.hotkey_var.set(self.config.get("hotkey", "ctrl+shift+s"))
-        
+
         # 触发质量改变事件
         self.on_quality_change()
     
@@ -576,9 +606,10 @@ class ScreenshotGUI:
         self.config.set("quality_preset", self.quality_var.get())
         self.config.set("auto_copy_path", self.copy_path_var.get())
         self.config.set("show_preview", self.show_preview_var.get())
+        self.config.set("custom_prefix", self.prefix_var.get())
         self.config.set("hotkey", self.hotkey_var.get())
         self.config.set("language", self.current_language)
-        
+
         if self.config.save_config():
             messagebox.showinfo(self.tr("settings_saved"), self.tr("settings_saved_msg"))
         else:

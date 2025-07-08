@@ -79,7 +79,8 @@ class ScreenshotConfig:
             "show_preview": True,
             "quality_preset": "low",  # low, medium, high
             "show_success_popup": False,
-            "screenshot_mode": "auto"
+            "screenshot_mode": "auto",
+            "custom_prefix": "read image: "  # 自定义前缀，默认为"read image: "
         }
         self.config = self.load_config()
     
@@ -895,9 +896,9 @@ class ScreenshotTool:
             
             # 保存图片（优化压缩）
             if self.save_optimized_image(img, str(filepath)):
-                # 复制路径到剪贴板
+                # 复制路径到剪贴板（支持自定义前缀）
                 if self.config.get("auto_copy_path", True):
-                    pyperclip.copy(str(filepath))
+                    self.copy_to_clipboard_with_prefix(str(filepath))
                 
                 # 显示成功消息（可选）
                 if self.config.get("show_success_popup", False):
@@ -912,7 +913,35 @@ class ScreenshotTool:
         except Exception as e:
             print(f"保存失败: {e}")
             messagebox.showerror("错误", f"保存失败: {e}")
-    
+
+    def copy_to_clipboard_with_prefix(self, filepath):
+        """复制路径到剪贴板，支持自定义前缀"""
+        try:
+            # 获取自定义前缀
+            custom_prefix = self.config.get("custom_prefix", "")
+
+            # 构建最终的剪贴板内容
+            if custom_prefix:
+                # 如果有自定义前缀，添加到路径前面
+                clipboard_content = custom_prefix + str(filepath)
+            else:
+                # 没有前缀，直接使用路径
+                clipboard_content = str(filepath)
+
+            # 复制到剪贴板
+            pyperclip.copy(clipboard_content)
+
+            print(f"已复制到剪贴板: {clipboard_content}")
+
+        except Exception as e:
+            print(f"复制到剪贴板失败: {e}")
+            # 如果复制失败，尝试只复制路径
+            try:
+                pyperclip.copy(str(filepath))
+                print(f"已复制路径到剪贴板: {filepath}")
+            except:
+                print("剪贴板操作完全失败")
+
     def save_optimized_image(self, img, filepath):
         """保存优化后的图片"""
         try:
