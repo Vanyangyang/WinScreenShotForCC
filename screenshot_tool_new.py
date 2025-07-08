@@ -159,6 +159,7 @@ class ScreenshotTool:
         self.monitors = []
         self.current_monitor = 0
         self.virtual_screen_rect = None
+        self.was_minimized = False  # 记录窗口是否被最小化
         
         # 初始化多屏幕信息
         self.detect_monitors()
@@ -498,8 +499,14 @@ class ScreenshotTool:
         # 重新检测显示器以确保最新配置
         self.detect_monitors()
         
-        # 隐藏主窗口
-        if hasattr(self, 'main_window'):
+        # 检查并隐藏主窗口
+        if hasattr(self, 'main_window') and self.main_window:
+            # 记录窗口是否已经最小化（图标化）
+            try:
+                self.was_minimized = self.main_window.winfo_viewable() == 0 or self.main_window.state() == 'iconic'
+                print(f"窗口最小化状态: {self.was_minimized}")
+            except:
+                self.was_minimized = False
             self.main_window.withdraw()
         
         print(f"=== 开始截图 (模式: {screenshot_mode}) ===")
@@ -862,10 +869,17 @@ class ScreenshotTool:
             traceback.print_exc()
             messagebox.showerror("错误", f"截图失败: {e}")
         finally:
-            # 恢复主窗口
+            # 根据之前的状态决定是否恢复主窗口
             if hasattr(self, 'main_window') and self.main_window:
                 try:
-                    self.main_window.deiconify()
+                    if not self.was_minimized:
+                        # 只有在窗口之前不是最小化状态时才恢复显示
+                        self.main_window.deiconify()
+                        print("恢复主窗口显示")
+                    else:
+                        # 窗口之前是最小化的，保持最小化
+                        self.main_window.iconify()
+                        print("保持主窗口最小化")
                 except:
                     pass
     
@@ -1062,9 +1076,16 @@ class ScreenshotTool:
         
         try:
             if hasattr(self, 'main_window') and self.main_window:
-                self.main_window.deiconify()
-                self.main_window.lift()
-                print("✓ 主窗口已恢复")
+                # 根据之前的状态决定是否恢复主窗口
+                if hasattr(self, 'was_minimized') and self.was_minimized:
+                    # 窗口之前是最小化的，保持最小化
+                    self.main_window.iconify()
+                    print("✓ 主窗口保持最小化")
+                else:
+                    # 窗口之前不是最小化的，恢复显示
+                    self.main_window.deiconify()
+                    self.main_window.lift()
+                    print("✓ 主窗口已恢复")
         except Exception as e:
             print(f"✗ 恢复主窗口失败: {e}")
 
