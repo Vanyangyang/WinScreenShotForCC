@@ -9,5 +9,6 @@
     "show_preview": false,
     "quality_preset": "low",
     "show_success_popup": false,
-    "screenshot_mode": "auto"
+    "screenshot_mode": "auto",
+    "language": "en"
 }

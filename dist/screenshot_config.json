@@ -9,5 +9,7 @@
     "show_success_popup": false,
     "optimize_image": true,
     "png_compress_level": 6,
-    "screenshot_mode": "auto"
+    "screenshot_mode": "auto",
+    "quality_preset": "low",
+    "language": "zh"
 }
