@@ -2,17 +2,17 @@
 
 
 a = Analysis(
-    ['G:\\u2dProject\\u6project\\VESPERIX\\scripts\\windows-screenshot-tool-forcc\\screenshot_gui.py'],
+    ['screenshot_gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('screenshot_config.json', '.')],
-    hiddenimports=['PIL', 'PIL.Image', 'PIL.ImageTk', 'PIL.ImageGrab', 'PIL.ImageDraw', 'pyperclip', 'keyboard', 'pystray', 'pystray._base', 'pystray._win32', 'tkinter', 'tkinter.ttk', 'tkinter.filedialog', 'tkinter.messagebox', 'json', 'threading', 'pathlib', 'datetime', 'ctypes', 'ctypes.wintypes', 'win32gui', 'win32ui', 'win32con', 'subprocess', 'screenshot_tool_new', 'sys', 'os', 'traceback'],
+    datas=[],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['matplotlib', 'numpy', 'pandas', 'scipy', 'cv2', 'torch', 'tensorflow'],
+    excludes=[],
     noarchive=False,
-    optimize=2,
+    optimize=0,
 )
 pyz = PYZ(a.pure)
 
@@ -21,11 +21,11 @@ exe = EXE(
     a.scripts,
     a.binaries,
     a.datas,
-    [('O', None, 'OPTION'), ('O', None, 'OPTION')],
+    [],
     name='ScreenshotTool',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=True,
+    strip=False,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
