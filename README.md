@@ -98,13 +98,41 @@
 
 ### 📁 环境准备
 
+1. **进入项目目录**
+   ```bash
+   cd /path/to/VESPERIX/scripts/windows-screenshot-tool-forcc
+   ```
+
+2. **激活虚拟环境**
+   ```bash
+   # Windows:
+   venv\Scripts\activate
+   
+   # 看到 (venv) 提示符表示激活成功
+   ```
+
+3. **修复依赖（如遇到模块缺失错误）**
+   
+   如果出现类似以下错误：
+   - `ModuleNotFoundError: No module named 'pyperclip'`
+   - `ModuleNotFoundError: No module named 'PyInstaller'`
+   
+   请先修复依赖：
+   ```bash
+   # 确保在虚拟环境中（看到 (venv) 提示符）
+   python fix_dependencies.py
+   
+   # 或使用批处理脚本
+   install_dependencies.bat
+   ```
+
 ### 🚀 使用 build_spec.py 构建
 
 ```bash
-# 确保在 screenshot-tool 目录中
-cd /path/to/VESPERIX/scripts/screenshot-tool
+# 确保在虚拟环境中（看到 (venv) 提示符）
+cd /path/to/VESPERIX/scripts/windows-screenshot-tool-forcc
 
-# 直接运行构建脚本（已包含虚拟环境）
+# 运行构建脚本
 python build_spec.py
 ```
 

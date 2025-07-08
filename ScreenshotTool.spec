@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['G:\\u2dProject\\u6project\\VESPERIX\\scripts\\screenshot-tool\\screenshot_gui.py'],
+    ['G:\\u2dProject\\u6project\\VESPERIX\\scripts\\windows-screenshot-tool-forcc\\screenshot_gui.py'],
     pathex=[],
     binaries=[],
     datas=[('screenshot_config.json', '.')],

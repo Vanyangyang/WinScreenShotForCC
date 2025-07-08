@@ -286,9 +286,9 @@ class ScreenshotGUI:
         quality = self.quality_var.get()
         
         quality_info = {
-            "low": "最小文件（~100-500KB）推荐Claude Code使用",
-            "medium": "平衡质量（~500KB-2MB）",
-            "high": "高质量（2MB+）⚠️"
+            "low": "推荐Claude Code使用",
+            "medium": "平衡质量",
+            "high": "高质量 ⚠️"
         }
         
         self.quality_info.config(text=quality_info.get(quality, ""))

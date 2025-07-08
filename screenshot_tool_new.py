@@ -909,10 +909,10 @@ class ScreenshotTool:
                 "low": {
                     "png_compress_level": 9,     # 最大压缩（1-9）
                     "optimize": True,
-                    "resize_threshold": 1920,    # 超过1920宽度就缩放
-                    "resize_max_width": 1600,    # 最大宽度限制
-                    "color_reduction": True,     # 颜色减少
-                    "quantize_colors": 256       # 调色板颜色数
+                    "resize_threshold": 9999999, # 不自动缩放
+                    "resize_max_width": 9999999, # 不限制宽度
+                    "color_reduction": False,    # 不减少颜色
+                    "quantize_colors": None      # 不使用调色板
                 },
                 "medium": {
                     "png_compress_level": 6,     # 中等压缩
@@ -947,35 +947,7 @@ class ScreenshotTool:
                 img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
                 print(f"图片缩放: {width}x{height} -> {new_width}x{new_height}")
             
-            # 低质量模式的额外优化
-            if quality_preset == "low":
-                # 1. 颜色深度优化
-                if settings["color_reduction"]:
-                    # 对于截图，通常不需要太多颜色
-                    if img.mode == 'RGBA':
-                        # 检查是否真的需要透明通道
-                        alpha = img.split()[3]
-                        if alpha.getextrema() == (255, 255):
-                            # 没有透明像素，转换为RGB
-                            img = img.convert('RGB')
-                            print("移除未使用的透明通道")
-                    
-                    # 转换为8位调色板
-                    if img.mode == 'RGB':
-                        # 使用自适应调色板，保持视觉质量
-                        img = img.convert('P', palette=Image.ADAPTIVE, colors=128)
-                        print(f"颜色优化: 使用128色调色板")
-                
-                # 2. 进一步压缩优化
-                # 对于UI截图，可以使用更少的颜色
-                if width * height > 1000000:  # 超过100万像素
-                    # 二次缩放
-                    if width > 1280:
-                        scale = 1280 / width
-                        new_width = int(width * scale)
-                        new_height = int(height * scale)
-                        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-                        print(f"二次缩放: {width}x{height} -> {new_width}x{new_height}")
+            # 低质量模式不再进行二次压缩，保持原始质量
             
             # PNG保存参数
             save_kwargs = {
@@ -983,29 +955,12 @@ class ScreenshotTool:
                 "compress_level": settings["png_compress_level"]
             }
             
-            # 对于低质量模式，使用特殊保存策略
+            # 对于低质量模式，使用正常保存策略，不再特殊处理
             if quality_preset == "low":
-                # 如果是调色板模式，直接保存
-                if img.mode == 'P':
-                    save_kwargs = {
-                        "optimize": True,
-                        "compress_level": 9,
-                        "bits": 8  # 8位PNG
-                    }
-                else:
-                    # 对于RGB图像，也尝试优化
-                    save_kwargs = {
-                        "optimize": True,
-                        "compress_level": 9
-                    }
-                    # 再次尝试减少颜色
-                    if img.mode == 'RGB':
-                        try:
-                            # 创建优化的调色板
-                            img = img.convert('P', palette=Image.ADAPTIVE, colors=64)
-                            print("最终优化: 64色调色板")
-                        except:
-                            pass
+                save_kwargs = {
+                    "optimize": settings["optimize"],
+                    "compress_level": settings["png_compress_level"]
+                }
             
             img.save(filepath, "PNG", **save_kwargs)
             
