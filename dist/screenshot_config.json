@@ -1,0 +1,13 @@
+{
+    "save_directory": "G:/u2dProject/u6project/VESPERIX/screenshots",
+    "file_prefix": "screenshot_",
+    "file_format": "png",
+    "hotkey": "ctrl+shift+s",
+    "auto_copy_path": true,
+    "show_preview": false,
+    "image_quality": 60,
+    "show_success_popup": false,
+    "optimize_image": true,
+    "png_compress_level": 6,
+    "screenshot_mode": "auto"
+}
