@@ -32,10 +32,12 @@
 - 🎨 **友好GUI界面**：直观的图形界面，所有功能一目了然
 - 🗑️ **智能清理功能**：一键清理历史截图，管理存储空间
 
-### 🖥️ GUI界面功能详解
+### 🖥️ GUI界面功能详解(新增英文切换)
 
+<img width="522" height="1082" alt="image" src="https://github.com/user-attachments/assets/a1e30ab6-cd4e-4e57-b13b-ea09f246c217" />
 
-![desc.png](desc.png)
+<img width="525" height="1082" alt="image" src="https://github.com/user-attachments/assets/663b6746-3457-438a-bd98-1d0776d7f5d1" />
+
 
 #### 📊 **显示器信息**
 - 自动检测所有连接的显示器!
